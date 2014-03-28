@@ -1,0 +1,8 @@
+# source this file to get the variable TENANT and TOKEN
+# this requires the keystone admin variables to exist
+
+TOKEN=$(keystone token-get | grep ' id' | awk '{print $4}')
+export TOKEN
+
+TENANT=$(keystone tenant-get $OS_TENANT_NAME | grep ' id' | awk '{print $4}')
+export TENANT
