@@ -1,28 +1,26 @@
 # source this file to setup OpenStack env variables
 # use the unadmin function to return env to original state
-# arg1 = IP address of the Keystone server
+# arg1 = IP address of the Keystone server, defaults to localhost
 #
-if [ -z "$1" ]; then
-    echo "no IP for Keystone server provided"
-else
-    AUTH_IP="$1"
+export OS_ROOT_IP=${1:-"localhost"}
 
-    export OS_USERNAME=admin
-    export OS_TENANT_NAME=admin
-    export OS_PASSWORD=openstack
-    export OS_AUTH_URL=http://${AUTH_IP}:5000/v2.0/
-    _OLD_PS1="$PS1"
-    export PS1="(keystone_admin-${AUTH_IP})${PS1}"
+export OS_USERNAME=admin
+export OS_TENANT_NAME=admin
+export OS_PASSWORD=openstack
+export OS_AUTH_URL=http://${OS_ROOT_IP}:5000/v2.0/
+_OLD_PS1="$PS1"
+export PS1="(keystone_admin-${OS_ROOT_IP})${PS1}"
 
-    unadmin () {
-        if [ -n "$_OLD_PS1" ] ; then
-            export PS1="$_OLD_PS1"
-            unset _OLD_PS1
-        fi
-        unset OS_USERNAME
-        unset OS_TENANT_NAME
-        unset OS_PASSWORD
-        unset OS_AUTH_URL
-        unset AUTH_IP
-    }
-fi
+echo "OpenStack privileges set, type unkeystone to end."
+
+unkeystone () {
+    if [ -n "$_OLD_PS1" ] ; then
+        export PS1="$_OLD_PS1"
+        unset _OLD_PS1
+    fi
+    unset OS_ROOT_IP
+    unset OS_USERNAME
+    unset OS_TENANT_NAME
+    unset OS_PASSWORD
+    unset OS_AUTH_URL
+}
